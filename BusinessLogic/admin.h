@@ -6,6 +6,7 @@ class Admin : public User
 {
 public:
     Admin(const string &username, const string &password);
+    bool isAdmin() const override { return true; }
 };
 
 #endif // ADMIN_H
