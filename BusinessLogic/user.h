@@ -10,6 +10,9 @@ protected:
     string password;
 public:
     User(const string &username, const string &password);
+    string getNick() const;
+    bool checkPassword(const string &password) const;
+    virtual bool isAdmin() const = 0;
 };
 
 #endif // USER_H

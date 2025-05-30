@@ -16,6 +16,9 @@ add_library(BusinessLogic SHARED
   user.h user.cpp
   admin.h admin.cpp
   student.h student.cpp
+  exceptions.h exceptions.cpp
+  course.h course.cpp
+  coursemanager.h coursemanager.cpp
 
 
 )
