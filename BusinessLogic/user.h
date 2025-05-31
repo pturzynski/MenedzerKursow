@@ -1,9 +1,10 @@
 #ifndef USER_H
 #define USER_H
 #include <QString>
+#include "BusinessLogic_global.h"
 using namespace std;
 
-class User
+class BUSINESSLOGIC_EXPORT User
 {
 protected:
     QString username;

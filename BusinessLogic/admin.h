@@ -2,7 +2,7 @@
 #define ADMIN_H
 #include "user.h"
 
-class Admin : public User
+class BUSINESSLOGIC_EXPORT Admin : public User
 {
 public:
     Admin(const QString &username, const QString &password);

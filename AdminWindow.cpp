@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "AdminWindow.h"
+#include "ui_AdminWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

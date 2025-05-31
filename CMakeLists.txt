@@ -11,10 +11,11 @@ add_subdirectory(BusinessLogic ${BusinessLogic_BINARY_DIR})
 qt_add_executable(MenedzerKursow
     WIN32 MACOSX_BUNDLE
     main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
+    AdminWindow.cpp
+    AdminWindow.h
+    AdminWindow.ui
     loginwindow.h loginwindow.cpp loginwindow.ui
+    studentwindow.h studentwindow.cpp studentwindow.ui
 
 )
 
