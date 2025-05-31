@@ -1,0 +1,43 @@
+#include "loginwindow.h"
+#include "ui_loginwindow.h"
+#include "mainwindow.h"
+#include <QMessageBox>
+#include "BusinessLogic/exceptions.h"
+
+LoginWindow::LoginWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::LoginWindow)
+{
+    ui->setupUi(this);
+}
+
+LoginWindow::~LoginWindow()
+{
+    delete ui;
+}
+
+void LoginWindow::on_loginButton_clicked()
+{
+    QString username = ui->usernameLineEdit->text();
+    QString password = ui->passwordLineEdit->text();
+    try{
+        if(username == "admin" && password == "admin"){
+            MainWindow *mainWindow = new MainWindow();
+            mainWindow->show();
+            this->close();
+        }
+
+       else if(username == "student" && password == "student"){
+            MainWindow *mainWindow = new MainWindow();
+            mainWindow->show();
+            this->close();
+        }
+
+        else{
+            throw LoginFailedException("Nieprawidłowy login lub hasło");
+        }
+    }
+    catch (const LoginFailedException &exc) {
+        QMessageBox::critical(this, "Błąd loowania", QString::fromStdString(exc.what()));
+    }
+}

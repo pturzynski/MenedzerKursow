@@ -5,18 +5,28 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 
 qt_standard_project_setup()
 
+set(BusinessLogic_BINARY_DIR ${CMAKE_BINARY_DIR}/BusinessLogic)
+add_subdirectory(BusinessLogic ${BusinessLogic_BINARY_DIR})
+
 qt_add_executable(MenedzerKursow
     WIN32 MACOSX_BUNDLE
     main.cpp
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    loginwindow.h loginwindow.cpp loginwindow.ui
+
 )
 
 target_link_libraries(MenedzerKursow
     PRIVATE
         Qt::Core
         Qt::Widgets
+	BusinessLogic
+)
+
+target_include_directories(MenedzerKursow PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic
 )
 
 include(GNUInstallDirs)
@@ -33,4 +43,3 @@ qt_generate_deploy_app_script(
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
 install(SCRIPT ${deploy_script})
-add_subdirectory(BusinessLogic)
