@@ -9,15 +9,26 @@
 class BUSINESSLOGIC_EXPORT CourseManager
 {
 private:
-    QList<Course> courses;
+    QList<Course> allCourses; //wszystkie kursy
+    QList<Course> studentCourses; //kursy studenta
     int nextId = 1;
 
 public:
     CourseManager();
 
-    void addCourse(const User *user, const QString &name, const QString &description); //dla admina
-    bool enrollToCourse(int courseId, const QString &nick); //dla studenta
-    const QList<Course> getCourses() const;
+    //gettery
+    QList<Course> getAllCourses() const;
+    QList<Course> getStudentCourses() const;
+
+    //metody zapisywania i wczytywania z pliku
+    void saveStudentCourses();
+    void loadStudentCourses();
+    bool enrollStudent(int courseId);
+
+    //metody admina
+    bool addCourse(const User* user, const QString& name, const QString& description);
+    bool removeCourse(const User* user, int courseId);
+
 };
 
 #endif // COURSEMANAGER_H

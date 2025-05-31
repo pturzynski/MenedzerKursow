@@ -39,28 +39,30 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="zapiszKursButton">
+            <property name="text">
+             <string>Zapisz na kurs</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <widget class="QTableWidget" name="listaKursowTableWidget">
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          </property>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>375</number>
+           <number>250</number>
           </attribute>
-          <column>
-           <property name="text">
-            <string>ID</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Nazwa kursu:</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Opis:</string>
-           </property>
-          </column>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
          </widget>
         </item>
        </layout>
@@ -69,6 +71,11 @@
        <attribute name="title">
         <string>Moje Kursy</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="mojeKursyTableWidget"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
