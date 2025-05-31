@@ -1,10 +1,10 @@
 #include "course.h"
 #include "exceptions.h"
 
-Course::Course(int id, const string &name, const string &description)
+Course::Course(int id, const QString &name, const QString &description)
     : id(id), name(name), description(description)
 {
-    if (name.empty() || description.empty()) {
+    if (name.isEmpty() || description.isEmpty()) {
         throw CourseEmptyException("Nazwa i opis nie mogą być puste");
     }
 }
@@ -14,19 +14,19 @@ int Course::getId() const
     return id;
 }
 
-string Course::getName() const
+QString Course::getName() const
 {
     return name;
 }
 
-string Course::getDescription() const
+QString Course::getDescription() const
 {
     return description;
 }
 
-void Course::enrollStudent(const string &nick)
+void Course::enrollStudent(const QString &nick)
 {
-    if(nick.empty()){
+    if(nick.isEmpty()){
         throw invalid_argument("Nick nie może być pusty");
     }
     if(!isStudentEnrolled(nick)){
@@ -34,12 +34,12 @@ void Course::enrollStudent(const string &nick)
     }
 }
 
-const vector<string> Course::getEnrolledStudents() const
+const QList<QString> Course::getEnrolledStudents() const
 {
     return enrolledStudents;
 }
 
-bool Course::isStudentEnrolled(const string &nick) const
+bool Course::isStudentEnrolled(const QString &nick) const
 {
     for(auto i = enrolledStudents.cbegin(); i != enrolledStudents.cend(); i++){
         if(*i == nick){

@@ -4,7 +4,7 @@
 class Student : public User
 {
 public:
-    Student(const string &username, const string &password);
+    Student(const QString &username, const QString &password);
     bool isAdmin() const override { return false; }
 };
 

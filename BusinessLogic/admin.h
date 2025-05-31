@@ -5,7 +5,7 @@
 class Admin : public User
 {
 public:
-    Admin(const string &username, const string &password);
+    Admin(const QString &username, const QString &password);
     bool isAdmin() const override { return true; }
 };
 

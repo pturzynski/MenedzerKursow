@@ -1,24 +1,24 @@
 #ifndef COURSE_H
 #define COURSE_H
-#include <string>
+#include <QString>
+#include <QList>
 using namespace std;
-#include<vector>
 class Course
 {
 private:
-    string name;
-    string description;
+    QString name;
+    QString description;
     int id;
-    vector<string> enrolledStudents;
+    QList<QString> enrolledStudents;
 public:
-    Course(int id, const string &name, const string &description);
+    Course(int id, const QString &name, const QString &description);
 
     int getId() const;
-    string getName() const;
-    string getDescription() const;
-    void enrollStudent(const string &nick);
-    const vector<string> getEnrolledStudents() const;
-    bool isStudentEnrolled(const string &nick) const;
+    QString getName() const;
+    QString getDescription() const;
+    void enrollStudent(const QString &nick);
+    const QList<QString> getEnrolledStudents() const;
+    bool isStudentEnrolled(const QString &nick) const;
 };
 
 #endif // COURSE_H

@@ -1,4 +1,4 @@
 #include "admin.h"
 
-Admin::Admin(const string &username, const string &password)
+Admin::Admin(const QString &username, const QString &password)
     : User(username, password){}

@@ -1,13 +1,13 @@
 #include "user.h"
 
-User::User(const string &username, const string &password)
+User::User(const QString &username, const QString &password)
     : username(username), password(password) {}
 
 
-string User::getNick() const {
+QString User::getNick() const {
     return username;
 }
 
-bool User::checkPassword(const string &p) const {
+bool User::checkPassword(const QString &p) const {
     return p == password;
 }

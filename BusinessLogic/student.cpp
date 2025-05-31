@@ -1,4 +1,4 @@
 #include "student.h"
 
-Student::Student(const string &username, const string &password) :
+Student::Student(const QString &username, const QString &password) :
     User(username, password){}
