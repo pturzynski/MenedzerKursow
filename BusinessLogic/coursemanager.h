@@ -21,6 +21,8 @@ public:
     QList<Course> getStudentCourses() const;
 
     //metody zapisywania i wczytywania z pliku
+    void loadAllCourses();
+    void saveAllCourses();
     void saveStudentCourses();
     void loadStudentCourses();
     bool enrollStudent(int courseId);
@@ -28,6 +30,7 @@ public:
     //metody admina
     bool addCourse(const User* user, const QString& name, const QString& description);
     bool removeCourse(const User* user, int courseId);
+    bool removeCourseCompletely(int courseId);
 
 };
 

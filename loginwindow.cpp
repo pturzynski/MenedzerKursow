@@ -20,12 +20,13 @@ LoginWindow::~LoginWindow()
 
 void LoginWindow::on_loginButton_clicked()
 {
-    QString username = ui->usernameLineEdit->text();
+    QString username = ui->usernameLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
     try{
         if(username == "admin" && password == "admin"){
-            MainWindow *mainWindow = new MainWindow();
-            mainWindow->show();
+            Admin* adminUser = new Admin(username, password);
+            AdminWindow *adminWindow = new AdminWindow(cm, adminUser);
+            adminWindow->show();
             this->close();
         }
 

@@ -5,16 +5,29 @@
 #include <string>
 using namespace std;
 
-class BUSINESSLOGIC_EXPORT LoginFailedException : public runtime_error
-{
+class BUSINESSLOGIC_EXPORT FileOpenException : public runtime_error {
 public:
-    LoginFailedException(const string& message);
+    explicit FileOpenException(const string& exc);
 };
 
-class BUSINESSLOGIC_EXPORT CourseEmptyException : public runtime_error
-{
+class BUSINESSLOGIC_EXPORT FileReadException : public runtime_error {
 public:
-    CourseEmptyException(const string& message);
+    explicit FileReadException(const string& exc);
+};
+
+class BUSINESSLOGIC_EXPORT FileWriteException : public runtime_error {
+public:
+    explicit FileWriteException(const string& exc);
+};
+
+class BUSINESSLOGIC_EXPORT LoginFailedException : public runtime_error {
+public:
+    explicit LoginFailedException(const string& exc);
+};
+
+class BUSINESSLOGIC_EXPORT CourseEmptyException : public runtime_error {
+public:
+    explicit CourseEmptyException(const string& exc);
 };
 
 #endif // EXCEPTIONS_H

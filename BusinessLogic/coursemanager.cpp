@@ -1,20 +1,16 @@
 #include "coursemanager.h"
+#include "exceptions.h"
 #include <QFile>
 #include <QTextStream>
-#include <QDebug>
 
 CourseManager::CourseManager() {
-    loadStudentCourses();
+    loadAllCourses();
 
-    if (allCourses.isEmpty() && studentCourses.isEmpty()){
-        allCourses.append(Course(nextId++, "Matematyka", "Podstawy matematyki"));
-        allCourses.append(Course(nextId++, "Fizyka", "Podstawy fizyki"));
-        allCourses.append(Course(nextId++, "Programowanie", "Nauka programowania w C++"));
-        allCourses.append(Course(nextId++, "Chemia", "Podstawy chemii"));
-        allCourses.append(Course(nextId++, "Biologia", "Podstawy biologii"));
+    QFile file("kursystudenta.txt");
+    if (file.exists() && file.size() > 0) {
+        loadStudentCourses();
     }
 }
-
 QList<Course> CourseManager::getAllCourses() const
 {
     return allCourses;
@@ -28,76 +24,65 @@ QList<Course> CourseManager::getStudentCourses() const
 void CourseManager::saveStudentCourses()
 {
     QFile file("kursystudenta.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() << "Nie można otworzyć pliku do zapisu!";
-        return;
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        throw FileWriteException("kursystudenta.txt");
     }
+
     QTextStream out(&file);
-    for (const Course &course : studentCourses)
-    {
-        out << course.getId() << "|" << course.getName() << "|" << course.getDescription() << "\n";
+    for (int i = 0; i < studentCourses.size(); ++i) {
+        const Course& c = studentCourses[i];
+        //zapis id;nazwa;opis
+        out << c.getId() << ";" << c.getName() << ";" << c.getDescription() << "\n";
     }
+
     file.close();
 }
+
 void CourseManager::loadStudentCourses()
 {
     QFile file("kursystudenta.txt");
-    if (!file.exists())
-    {
-        //tworzenie pliku jesli nie istnieje
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            qDebug() << "Nie można utworzyć pliku kursystudenta.txt";
-            return;
-        }
-        file.close();
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        throw FileOpenException("kursystudenta.txt");
     }
-
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() << "Nie można otworzyć pliku do odczytu.";
-        return;
-    }
-
-    studentCourses.clear();
 
     QTextStream in(&file);
-    bool hasData = false;
-    while (!in.atEnd())
-    {
-        QString line = in.readLine();
-        if (line.trimmed().isEmpty())
+    studentCourses.clear();
+
+    while (!in.atEnd()) {
+        QString line = in.readLine().trimmed();
+        if (line.isEmpty())
             continue;
 
-        hasData = true;
+        QStringList parts = line.split(';');
+        if (parts.size() < 3)
+            continue; // jesli jest wiecej nic 3 ; to pomijamy ta linijke bo jest niepoprawna
 
-        QStringList parts = line.split("|");
-        if (parts.size() == 3)
-        {
-            bool ok = false;
-            int id = parts[0].toInt(&ok);
-            if (!ok)
-                continue;
+        bool czyok;
+        int id = parts[0].toInt(&czyok);
+        if (!czyok) {
+            throw FileReadException("Nieprawidłowy id kursu w pliku txt " + parts[0].toStdString());
+        }
 
-            bool found = false;
-            for (int i = 0; i < allCourses.size(); ++i)
-            {
-                if (allCourses[i].getId() == id)
-                {
-                    studentCourses.append(allCourses[i]);
-                    allCourses.removeAt(i);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-            {
-                studentCourses.append(Course(id, parts[1], parts[2]));
+        QString name = parts[1];
+        QString description = parts.mid(2).join(";");
+
+        studentCourses.append(Course(id, name, description));
+    }
+
+    file.close();
+
+    //usuwamy kursy na ktorych jest student
+    for (int i = 0; i < studentCourses.size(); ++i) {
+        int idToRemove = studentCourses[i].getId();
+
+        for (auto j = allCourses.begin(); j != allCourses.end(); ) {
+            if (j->getId() == idToRemove) {
+                j = allCourses.erase(j);
+            } else {
+                ++j;
             }
         }
     }
-    file.close();
 }
 
 bool CourseManager::enrollStudent(int courseId)
@@ -108,11 +93,11 @@ bool CourseManager::enrollStudent(int courseId)
         {
             studentCourses.append(allCourses[i]);
             allCourses.removeAt(i);
-            saveStudentCourses(); // zapis do pliku po zapisie kursu
+            saveStudentCourses();
             return true;
         }
     }
-    return false; // kurs nie znaleziony
+    return false;
 }
 
 bool CourseManager::addCourse(const User* user, const QString& name, const QString& description)
@@ -121,6 +106,7 @@ bool CourseManager::addCourse(const User* user, const QString& name, const QStri
         return false;
 
     allCourses.append(Course(nextId++, name, description));
+    saveAllCourses();
     return true;
 }
 
@@ -134,8 +120,105 @@ bool CourseManager::removeCourse(const User* user, int courseId)
         if (allCourses[i].getId() == courseId)
         {
             allCourses.removeAt(i);
+            saveAllCourses();
             return true;
         }
     }
     return false;
+}
+
+void CourseManager::saveAllCourses()
+{
+    QFile file("wszystkiekursy.txt");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        throw FileWriteException("wszystkiekursy.txt");
+    }
+
+    QTextStream out(&file);
+    for (auto i = allCourses.begin(); i != allCourses.end(); ++i) {
+        out << i->getId() << ";" << i->getName() << ";" << i->getDescription() << "\n";
+    }
+    file.close();
+}
+
+void CourseManager::loadAllCourses()
+{
+    QFile file("wszystkiekursy.txt");
+    if (!file.exists())
+        allCourses.append(Course(nextId++, "Matematyka", "Podstawy algebry i analizy"));
+        allCourses.append(Course(nextId++, "Fizyka", "Wprowadzenie do fizyki"));
+        allCourses.append(Course(nextId++, "Programowanie", "Podstawy programowania w C++"));
+        allCourses.append(Course(nextId++, "Chemia", "Podstawy chemii"));
+        allCourses.append(Course(nextId++, "Język angielski", "Kurs podstawowego angielskiego"));
+        saveAllCourses();
+        return;
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        throw FileOpenException("wszystkiekursy.txt");
+    }
+
+    QTextStream in(&file);
+    allCourses.clear();
+
+    while (!in.atEnd()) {
+        QString line = in.readLine().trimmed();
+        if (line.isEmpty())
+            continue;
+
+        QStringList parts = line.split(';');
+        if (parts.size() < 3)
+            continue;
+
+        bool czyok;
+        int id = parts[0].toInt(&czyok);
+        if (!czyok) {
+            throw FileReadException("Nieprawidłowy ID kursu w pliku wszystkiekursy.txt: " + parts[0].toStdString());
+        }
+
+        QString name = parts[1];
+        QString description = parts.mid(2).join(";");
+
+        if (id >= nextId)
+            nextId = id + 1;
+
+        allCourses.append(Course(id, name, description));
+    }
+
+    file.close();
+}
+
+bool CourseManager::removeCourseCompletely(int courseId)
+{
+    bool removedFromAllCourses = false;
+    bool removedFromStudentCourses = false;
+
+    // Usuwamy z allCourses
+    for (auto it = allCourses.begin(); it != allCourses.end(); ) {
+        if (it->getId() == courseId) {
+            it = allCourses.erase(it);
+            removedFromAllCourses = true;
+        } else {
+            ++it;
+        }
+    }
+
+    // Usuwamy z studentCourses
+    for (auto it = studentCourses.begin(); it != studentCourses.end(); ) {
+        if (it->getId() == courseId) {
+            it = studentCourses.erase(it);
+            removedFromStudentCourses = true;
+        } else {
+            ++it;
+        }
+    }
+
+    if (removedFromAllCourses) {
+        saveAllCourses();
+    }
+
+    if (removedFromStudentCourses) {
+        saveStudentCourses();
+    }
+
+    return removedFromAllCourses || removedFromStudentCourses;
 }
