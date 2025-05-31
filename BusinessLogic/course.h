@@ -2,8 +2,9 @@
 #define COURSE_H
 #include <QString>
 #include <QList>
+#include "BusinessLogic_global.h"
 using namespace std;
-class Course
+class BUSINESSLOGIC_EXPORT Course
 {
 private:
     QString name;

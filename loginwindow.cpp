@@ -1,12 +1,14 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
-#include "mainwindow.h"
+#include "AdminWindow.h"
+#include "studentwindow.h"
 #include <QMessageBox>
 #include "BusinessLogic/exceptions.h"
 
-LoginWindow::LoginWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::LoginWindow)
+LoginWindow::LoginWindow(CourseManager *cm, QWidget *parent)
+    : QMainWindow(parent),
+    cm(cm),
+    ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
 }
@@ -28,8 +30,8 @@ void LoginWindow::on_loginButton_clicked()
         }
 
        else if(username == "student" && password == "student"){
-            MainWindow *mainWindow = new MainWindow();
-            mainWindow->show();
+            StudentWindow *studentWindow = new StudentWindow(cm); //
+            studentWindow->show();
             this->close();
         }
 
